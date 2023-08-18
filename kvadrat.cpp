@@ -5,7 +5,6 @@
 int main()
 {
     double a, b, c;
-
     printf("Введите коэффициенты a, b, c\n");
     scanf("%lf %lf %lf", &a, &b, &c);
     if (a <= POGR)
