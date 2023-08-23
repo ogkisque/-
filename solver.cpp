@@ -2,14 +2,14 @@
 #include <assert.h>
 #include <stdlib.h>
 
-const double EPS = 1e-5;
+const double EPS = 1e-8;
 
 enum NumOfSolutions
 {
     NO_ROOTS = 0,
     ONE_ROOT = 1,
     TWO_ROOTS = 2,
-    INFINIT_ROOTS = 1000
+    INFINIT_ROOTS = -1
 };
 
 NumOfSolutions solve_equation (double a, double b, double c, double* x1, double* x2);
@@ -59,7 +59,7 @@ NumOfSolutions solve_square (double a, double b, double c, double* x1, double* x
     assert (isfinite(a));
     assert (isfinite(b));
     assert (isfinite(c));
-    assert (fabs(a) > EPS);
+    assert (!is_equal(a, 0));
     assert (x1 != NULL);
     assert (x2 != NULL);
     assert (x1 != x2);
@@ -85,5 +85,5 @@ NumOfSolutions solve_square (double a, double b, double c, double* x1, double* x
 
 bool is_equal (double a, double b)
 {
-    return fabs(a - b) <= EPS;
+    return (fabs(a - b) <= EPS);
 }

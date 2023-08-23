@@ -6,7 +6,7 @@ enum NumOfSolutions
     NO_ROOTS = 0,
     ONE_ROOT = 1,
     TWO_ROOTS = 2,
-    INFINIT_ROOTS = 1000
+    INFINIT_ROOTS = -1
 };
 
 void input_double (double* a, double* b, double* c);
@@ -21,10 +21,10 @@ void output_answer(int n_roots, double x1, double x2)
         printf ("No solutions");
         break;
     case ONE_ROOT:
-        printf ("1 solution: %.15lf", x1);
+        printf ("1 solution: %.5lf", x1);
         break;
     case TWO_ROOTS:
-        printf ("2 solutions: %.15lf %.15lf", x1, x2);
+        printf ("2 solutions: %.5lf %.5lf", x1, x2);
         break;
     case INFINIT_ROOTS:
         printf ("Infinite number of solutions");
