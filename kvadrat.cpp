@@ -6,18 +6,22 @@
 
 const double EPS = 1e-5;
 
-void input_double (double* a, double* b, double* c);
-bool is_equal (double a, double b);
-void output_answer (int n_roots, double x1, double x2);
-int solve_equation (double a, double b, double c, double* x1, double* x2);
-int solve_linear (double a, double b, double* x);
-int solve_square (double a, double b, double c, double* x1, double* x2);
-bool end_input (char last_c);
-
-enum n_solutions
+enum NumOfSolutions
 {
-    ZERO, ONE, TWO, INFINIT = 1000
+    NO_ROOTS = 0,
+    ONE_ROOT = 1,
+    TWO_ROOTS = 2,
+    INFINIT_ROOTS = 1000
 };
+
+NumOfSolutions solve_equation (double a, double b, double c, double* x1, double* x2);
+NumOfSolutions solve_linear (double a, double b, double* x);
+NumOfSolutions solve_square (double a, double b, double c, double* x1, double* x2);
+bool is_equal (double a, double b);
+
+void input_double (double* a, double* b, double* c);
+void clear_buffer ();
+void output_answer (int n_roots, double x1, double x2);
 
 int main ()
 {
@@ -31,7 +35,7 @@ int main ()
     output_answer (n_roots, x1, x2);
 }
 
-int solve_equation (double a, double b, double c, double* x1, double* x2)
+NumOfSolutions solve_equation (double a, double b, double c, double* x1, double* x2)
 {
     assert (isfinite(a));
     assert (isfinite(b));
@@ -50,68 +54,71 @@ int solve_equation (double a, double b, double c, double* x1, double* x2)
     }
 }
 
-int solve_linear (double a, double b, double* x)
+NumOfSolutions solve_linear (double a, double b, double* x)
 {
-    assert(isfinite(a));
-    assert(isfinite(b));
+    assert (isfinite(a));
+    assert (isfinite(b));
     assert (x != NULL);
 
-    if (is_equal(a, 0))
+    if (is_equal (a, 0))
     {
-        if (is_equal(b, 0))
-            return INFINIT;
-        else
-            return ZERO;
+        return is_equal(b, 0) ? INFINIT_ROOTS : NO_ROOTS;
+
     }
     else
     {
         *x = -b / a;
-        return ONE;
+        return ONE_ROOT;
     }
 }
 
-int solve_square (double a, double b, double c, double* x1, double* x2)
+NumOfSolutions solve_square (double a, double b, double c, double* x1, double* x2)
 {
-    assert (fabs(a) <= EPS);
+    assert (isfinite(a));
+    assert (isfinite(b));
+    assert (isfinite(c));
+    assert (fabs(a) > EPS);
     assert (x1 != NULL);
     assert (x2 != NULL);
     assert (x1 != x2);
-    double des = b*b - 4*a*c;
+
+    double des = b * b - 4 * a * c;
     if (des < -EPS)
     {
-        return ZERO;
+        return NO_ROOTS;
     }
-    else if (is_equal(des, 0))
+    else if (is_equal (des, 0))
     {
         *x1 = -b / (2*a);
-        return ONE;
+        return ONE_ROOT;
     }
     else
     {
-        double sqrt_des = sqrt(des);
+        double sqrt_des = sqrt (des);
         *x1 = (-b - sqrt_des) / (2*a);
         *x2 = (-b + sqrt_des) / (2*a);
-        return TWO;
+        return TWO_ROOTS;
     }
 }
 
 void output_answer(int n_roots, double x1, double x2)
 {
-    switch (n_roots) {
-    case ZERO:
+    switch (n_roots)
+    {
+    case NO_ROOTS:
         printf ("No solutions");
         break;
-    case ONE:
+    case ONE_ROOT:
         printf ("1 solution: %.5lf", x1);
         break;
-    case TWO:
+    case TWO_ROOTS:
         printf ("2 solutions: %.5lf %.5lf", x1, x2);
         break;
-    case INFINIT:
+    case INFINIT_ROOTS:
         printf ("Infinite number of solutions");
         break;
     default:
-        assert (0);
+        assert (!"Problem is in the output_answer function");
         break;
     }
 }
@@ -119,20 +126,20 @@ void output_answer(int n_roots, double x1, double x2)
 void input_double (double* a, double* b, double* c)
 {
     printf ("# Enter the coefficients a, b, c separated by a space\n");
-    while (!(scanf("%lf %lf %lf", a, b, c) == 3))
+    while (scanf ("%lf %lf %lf", a, b, c) != 3)
     {
-        while (getchar() != '\n')
-            ;
+        clear_buffer();
         printf ("# Invalid input\n# Enter the coefficients a, b, c separated by a space\n");
     }
 }
 
-bool end_input (char last_c)
+void clear_buffer ()
 {
-    return (last_c == '\n' || last_c == ' ' || last_c == '\t');
+    while (getchar() != '\n')
+        ;
 }
 
 bool is_equal (double a, double b)
 {
-    return ((a - b) <= EPS);
+    return fabs(a - b) <= EPS;
 }
