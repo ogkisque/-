@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
+#include "input_output.h"
+
 
 enum NumOfSolutions
 {
@@ -9,9 +11,6 @@ enum NumOfSolutions
     INFINIT_ROOTS = -1
 };
 
-void input_double (double* a, double* b, double* c);
-void clear_buffer ();
-void output_answer (int n_roots, double x1, double x2);
 
 void output_answer(int n_roots, double x1, double x2)
 {
@@ -40,8 +39,9 @@ void input_double (double* a, double* b, double* c)
     printf ("# Enter the coefficients a, b, c separated by a space\n");
     while (scanf ("%lf %lf %lf", a, b, c) != 3)
     {
-        clear_buffer();
-        printf ("# Invalid input\n# Enter the coefficients a, b, c separated by a space\n");
+        clear_buffer ();
+        printf ("# Invalid input\n"
+                "# Enter the coefficients a, b, c separated by a space\n");
     }
 }
 
