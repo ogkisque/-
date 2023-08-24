@@ -1,15 +1,7 @@
 #ifndef IO_HEADER
 #define IO_HEADER
 
-/*
-enum NumOfSolutions
-{
-    NO_ROOTS = 0,
-    ONE_ROOT = 1,
-    TWO_ROOTS = 2,
-    INFINIT_ROOTS = -1
-};
-*/
+#include "output_complex.h"
 
 void input_double (double* a, double* b, double* c);
 void clear_buffer ();

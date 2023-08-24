@@ -15,6 +15,7 @@ struct Test
 };
 
 void read_file (const char* file_name, struct Test* tests);
+void swap (double* a, double* b);
 void all_tests ();
 bool one_test (double a, double b, double c, int n_roots_ref, double x1_ref, double x2_ref);
 bool is_equal_test(double a, double b);

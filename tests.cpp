@@ -17,11 +17,11 @@ bool is_equal_test (double a, double b)
     return (fabs(a - b) <= EPS_TESTS);
 }
 
-void swap(double* x1, double* x2)
+void swap(double* a, double* b)
 {
-    double tmp = *x1;
-    *x1 = *x2;
-    *x2 = tmp;
+    double tmp = *a;
+    *a = *b;
+    *b = tmp;
 }
 
 void read_file (const char* file_name, struct Test* tests)
@@ -69,9 +69,10 @@ void all_tests ()
         }
         else
         {
-            printf("%*s is FAILED. a = %lf b = %lf c = %lf\n"
-                   "Expected: %d num of roots, x1 = %lf, x2 = %lf,"
-                   "but got %d num of roots, x1 = %lf, x2 = %lf\n",
+            printf("%*s is FAILED.\n"
+                   "a = %lf, b = %lf, c = %lf\n"
+                   "Expected: %d num of roots, x1 = %lf, x2 = %lf.\n"
+                   "Got:      %d num of roots, x1 = %lf, x2 = %lf\n",
                     SIZE_OF_NAME, tests[i].name, tests[i].a, tests[i].b, tests[i].c,
                     tests[i].n_roots, tests[i].answer1, tests[i].answer2,
                     n_roots, x1, x2);

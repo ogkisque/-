@@ -2,16 +2,6 @@
 #include <assert.h>
 #include "input_output.h"
 
-
-enum NumOfSolutions
-{
-    NO_ROOTS = 0,
-    ONE_ROOT = 1,
-    TWO_ROOTS = 2,
-    INFINIT_ROOTS = -1
-};
-
-
 void output_answer(int n_roots, double x1, double x2)
 {
     switch (n_roots)
