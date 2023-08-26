@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-
 #include "solver.h"
 #include "tests.h"
+
 
 const char* FLAG_TESTS = "--tests";
 
