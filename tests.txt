@@ -1,0 +1,10 @@
+discriminant_0 1 2 1 1 -1 0 0 0
+base_equation 1 1 -6 2 -3 0 2 0
+small_coeffs1 0.0001 -0.0002 0.0001 1 0 0 1 0
+small_coeffs2 0.0001 -0.0008 0.0001 2 0.127017 0 7.87298 0
+big_coeffs1 1000000 -1234560 7890 2 0.006424 0 1.22814 0
+big_coeffs2 10000000000 -5000000000 6500000 2 0.001303 0 0.498697 0
+discriminant_negative 1 0 81 2 0 -9 0 9
+infinit_roots 0 0 0 -1 0 0 0 0
+linear 0 5 -10 1 0 0 2 0
+no_roots 0 0 10000 0 0 0 0 0

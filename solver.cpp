@@ -1,7 +1,10 @@
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "solver.h"
+#include "colors.h"
 
 const double EPS = 1e-8;
 
@@ -24,61 +27,66 @@ NumOfSolutions solve_linear (double a, double b, Complex* x)
     }
 }
 
-NumOfSolutions solve_square (double a, double b, double c, Complex* x1, Complex* x2)
+NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2)
 {
     assert (isfinite (x1->real));
     assert (isfinite (x2->real));
     assert (isfinite (x1->imag));
     assert (isfinite (x2->imag));
-    assert (isfinite (a));
-    assert (isfinite (b));
-    assert (isfinite (c));
-    assert (!is_equal (a, 0));
+    assert (isfinite (coeffs->a));
+    assert (isfinite (coeffs->b));
+    assert (isfinite (coeffs->c));
+    assert (!is_equal (coeffs->a, 0));
     assert (x1 != NULL);
     assert (x2 != NULL);
     assert (x1 != x2);
 
-    double discr = b * b - 4 * a * c;
+    double discr = coeffs->b * coeffs->b - 4 * coeffs->a * coeffs->c;
+    double sqrt_discr = sqrt (fabs(discr));
 
     if (discr < -EPS)
     {
-        double sqrt_discr = sqrt (fabs(discr));
-        x1->real = -b / 2 / a;
-        x1->imag = sqrt_discr / 2 / a;
+        x1->real = -(coeffs->b) / 2 / coeffs->a;
+        x1->imag = sqrt_discr / 2 / coeffs->a;
         x2->real = x1->real;
-        x2->imag = -sqrt_discr / 2 / a;
+        x2->imag = -sqrt_discr / 2 / coeffs->a;
         return TWO_ROOTS;
     }
-    else if (is_equal (discr, 0))
+
+    if (is_equal (discr, 0))
     {
-        x1->real = -b / 2 / a;
+        x1->real = -(coeffs->b) / 2 / coeffs->a;
         return ONE_ROOT;
     }
-    else
-    {
-        double sqrt_discr = sqrt (discr);
-        x1->real = (-b - sqrt_discr) / 2 / a;
-        x2->real = (-b + sqrt_discr) / 2 / a;
-        return TWO_ROOTS;
-    }
+
+    x1->real = (-(coeffs->b) - sqrt_discr) / 2 / coeffs->a;
+    x2->real = (-(coeffs->b) + sqrt_discr) / 2 / coeffs->a;
+    return TWO_ROOTS;
 }
 
-NumOfSolutions solve_equation (double a, double b, double c, Complex* x1, Complex* x2)
+NumOfSolutions solve_equation (Coeffs* coeffs, Complex* x1, Complex* x2)
 {
-    assert (isfinite (a));
-    assert (isfinite (b));
-    assert (isfinite (c));
+    assert (isfinite (coeffs->a));
+    assert (isfinite (coeffs->b));
+    assert (isfinite (coeffs->c));
     assert (x1 != NULL);
     assert (x2 != NULL);
     assert (x1 != x2);
 
-    if (is_equal(a, 0))
+    if (is_equal(coeffs->a, 0))
     {
-        return solve_linear (b, c, x1);
+        return solve_linear (coeffs->b, coeffs->c, x1);
     }
     else
     {
-        return solve_square (a, b, c, x1, x2);
+        if (!is_equal (coeffs->b, 0) && is_equal (coeffs->c, 0))
+        {
+            x1->real = 0;
+            x1->imag = 0;
+            solve_linear (coeffs->a, coeffs->b, x2);
+            return TWO_ROOTS;
+        }
+        return solve_square (coeffs, x1, x2);
     }
 }
 
@@ -92,11 +100,18 @@ bool is_equal (double a, double b)
 
 double make_negative_zero (double x)
 {
+    assert (isfinite (x));
+
     return (is_equal (x, 0)) ? 0 : x;
 }
 
 void output_answer (int n_roots, Complex* x1, Complex* x2)
 {
+    assert (isfinite(x1->real));
+    assert (isfinite(x2->real));
+    assert (isfinite(x1->imag));
+    assert (isfinite(x2->imag));
+
     x1->real = make_negative_zero(x1->real);
     x2->real = make_negative_zero(x2->real);
     x1->imag = make_negative_zero(x1->imag);
@@ -108,14 +123,16 @@ void output_answer (int n_roots, Complex* x1, Complex* x2)
         printf ("No solutions");
         break;
     case ONE_ROOT:
-        printf ("1 solution: x = ");
-        print_complex (x1);
+        char str[MAX_LENGTH];
+        print_complex (x1, str);
+        printf ("1 solution: x = %s", str);
         break;
     case TWO_ROOTS:
-        printf ("2 solutions: x1 = ");
-        print_complex (x1);
-        printf (", x2 = ");
-        print_complex (x2);
+        char str1[MAX_LENGTH];
+        char str2[MAX_LENGTH];
+        print_complex (x1, str1);
+        print_complex (x2, str2);
+        printf ("2 solutions: x1 = %s, x2 = %s", str1, str2);
         break;
     case INFINIT_ROOTS:
         printf ("Infinite number of solutions");
@@ -126,20 +143,47 @@ void output_answer (int n_roots, Complex* x1, Complex* x2)
     }
 }
 
-void print_complex (Complex* x)
+int print_complex (const Complex* x, char* str)
 {
-    printf ("%.5lf", x->real);
+    assert (isfinite (x->real));
+    assert (isfinite (x->imag));
+
+    char str_real[MAX_LENGTH];
+    char str_imag[MAX_LENGTH];
+    char str_zero[] = "0";
+    sprintf (str_real, "%.2lf", x->real);
     if (x->imag >= 0)
-        printf(" + %.5lfi", x->imag);
+        sprintf (str_imag, " + %.2lfi", x->imag);
     else
-        printf(" - %.5lfi", fabs(x->imag));
+        sprintf (str_imag, " - %.2lfi", fabs(x->imag));
+
+    if (is_equal (x->real, 0))
+    {
+        strcpy (str_real, str_zero);
+        if (is_equal (x->imag, 0))
+        {
+            strcpy (str, str_zero);
+            return 0;
+        }
+    }
+    else if (is_equal (x->imag, 0))
+    {
+        strcpy (str_imag, str_zero);
+        if (is_equal (x->real, 0))
+        {
+            strcpy (str, str_zero);
+            return 0;
+        }
+    }
+    strcat (str_real, str_imag);
+    strcpy (str, str_real);
+    return 0;
 }
 
-
-void input_double (double* a, double* b, double* c)
+void input_coefficients (Coeffs* coeffs)
 {
     printf ("# Enter the coefficients a, b, c separated by a space\n");
-    while (scanf ("%lf %lf %lf", a, b, c) != 3)
+    while (scanf ("%lf %lf %lf", &(coeffs->a), &(coeffs->b), &(coeffs->c)) != 3)
     {
         clear_buffer ();
         printf ("# Invalid input\n"
@@ -151,4 +195,14 @@ void clear_buffer ()
 {
     while (getchar() != '\n')
         ;
+}
+
+void greeting ()
+{
+    printf (YELLOW_COLOR "# Hello! This program will solve your quadratic equation with complex numbers.\n");
+}
+
+void end_of_programm ()
+{
+    printf(OFF_COLOR "\n");
 }

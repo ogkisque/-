@@ -14,14 +14,34 @@ struct Complex
     double imag;
 };
 
+struct Coeffs {
+    double a;
+    double b;
+    double c;
+};
+
+struct Roots {
+    Complex x1;
+    Complex x2;
+};
+
+enum Errors
+{
+    CORRECT             = 0,
+    ERROR_FILE_OPEN     = 1,
+    ERROR_OF_MEMORY     = 2
+};
+
 //! This enum stores all possible numbers of solutions to the quadratic equation
 enum NumOfSolutions
 {
-    NO_ROOTS = 0,
-    ONE_ROOT = 1,
-    TWO_ROOTS = 2,
-    INFINIT_ROOTS = -1
+    INFINIT_ROOTS   = -1,
+    NO_ROOTS        = 0,
+    ONE_ROOT        = 1,
+    TWO_ROOTS       = 2,
 };
+
+const int MAX_LENGTH = 20;
 
 //! @brief Solves a linear equation
 //! @param double a - the first coefficient
@@ -37,7 +57,7 @@ NumOfSolutions solve_linear (double a, double b, Complex* x);
 //! @param Complex* x1 - pointer to the first answer
 //! @param Complex* x2 - pointer to the second answer
 //! @return Number of solutions
-NumOfSolutions solve_square (double a, double b, double c, Complex* x1, Complex* x2);
+NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2);
 
 //! @brief Solves a square equation
 //! @param double a - the first coefficient
@@ -46,7 +66,7 @@ NumOfSolutions solve_square (double a, double b, double c, Complex* x1, Complex*
 //! @param Complex* x1 - pointer to the first answer
 //! @param Complex* x2 - pointer to the second answer
 //! @return Number of solutions
-NumOfSolutions solve_equation (double a, double b, double c, Complex* x1, Complex* x2);
+NumOfSolutions solve_equation (Coeffs* coeffs, Complex* x1, Complex* x2);
 
 //! @brief Compares 2 numbers of the double type
 //! @param double a
@@ -69,17 +89,21 @@ void output_answer (int n_roots, Complex* x1, Complex* x2);
 //! @brief Prints a complex number
 //! @param Complex* x - pointer to output Complex number
 //! @return void
-void print_complex (Complex* x);
+int print_complex (const Complex* x, char* str);
 
 //! @brief Enters the coefficients of the square equation
 //! @param double* a - pointer to the first coefficient
 //! @param double* b - pointer to the second coefficient
 //! @param double* c - pointer to the third coefficient
 //! @return void
-void input_double (double* a, double* b, double* c);
+void input_coefficients (Coeffs* coeffs);
 
 //! @brief Clear buffer contents
 //! @return void
 void clear_buffer ();
 
-#endif
+void greeting ();
+
+void end_of_programm ();
+
+#endif //SOLVER_HEADER
