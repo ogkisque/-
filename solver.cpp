@@ -6,9 +6,9 @@
 #include "solver.h"
 #include "colors.h"
 
-const double EPS = 1e-8;
+static const double EPS = 1e-8;
 
-NumOfSolutions solve_linear (double a, double b, Complex* x)
+NumOfSolutions solve_linear (const double a, const double b, Complex* x)
 {
     assert (isfinite (a));
     assert (isfinite (b));
@@ -17,7 +17,6 @@ NumOfSolutions solve_linear (double a, double b, Complex* x)
     if (is_equal (a, 0))
     {
         return is_equal(b, 0) ? INFINIT_ROOTS : NO_ROOTS;
-
     }
     else
     {
@@ -27,7 +26,7 @@ NumOfSolutions solve_linear (double a, double b, Complex* x)
     }
 }
 
-NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2)
+NumOfSolutions solve_square (const Coeffs* coeffs, Complex* x1, Complex* x2)
 {
     assert (isfinite (x1->real));
     assert (isfinite (x2->real));
@@ -64,7 +63,7 @@ NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2)
     return TWO_ROOTS;
 }
 
-NumOfSolutions solve_equation (Coeffs* coeffs, Complex* x1, Complex* x2)
+NumOfSolutions solve_equation (const Coeffs* coeffs, Complex* x1, Complex* x2)
 {
     assert (isfinite (coeffs->a));
     assert (isfinite (coeffs->b));
@@ -73,29 +72,28 @@ NumOfSolutions solve_equation (Coeffs* coeffs, Complex* x1, Complex* x2)
     assert (x2 != NULL);
     assert (x1 != x2);
 
-    if (is_equal(coeffs->a, 0))
+    if (is_equal (coeffs->a, 0))
     {
         return solve_linear (coeffs->b, coeffs->c, x1);
     }
-    else
+
+    if (!is_equal (coeffs->b, 0) && is_equal (coeffs->c, 0))
     {
-        if (!is_equal (coeffs->b, 0) && is_equal (coeffs->c, 0))
-        {
-            x1->real = 0;
-            x1->imag = 0;
-            solve_linear (coeffs->a, coeffs->b, x2);
-            return TWO_ROOTS;
-        }
-        return solve_square (coeffs, x1, x2);
+        x1->real = 0;
+        x1->imag = 0;
+        solve_linear (coeffs->a, coeffs->b, x2);
+        return TWO_ROOTS;
     }
+
+    return solve_square (coeffs, x1, x2);
 }
 
-bool is_equal (double a, double b)
+bool is_equal (const double a, const double b)
 {
     assert (isfinite (a));
     assert (isfinite (b));
 
-    return (fabs(a - b) <= EPS);
+    return (fabs (a - b) <= EPS);
 }
 
 double make_negative_zero (double x)
@@ -105,41 +103,40 @@ double make_negative_zero (double x)
     return (is_equal (x, 0)) ? 0 : x;
 }
 
-void output_answer (int n_roots, Complex* x1, Complex* x2)
+void output_answer (const int n_roots, Complex* x1, Complex* x2)
 {
-    assert (isfinite(x1->real));
-    assert (isfinite(x2->real));
-    assert (isfinite(x1->imag));
-    assert (isfinite(x2->imag));
+    assert (isfinite (x1->real));
+    assert (isfinite (x2->real));
+    assert (isfinite (x1->imag));
+    assert (isfinite (x2->imag));
 
-    x1->real = make_negative_zero(x1->real);
-    x2->real = make_negative_zero(x2->real);
-    x1->imag = make_negative_zero(x1->imag);
-    x2->imag = make_negative_zero(x2->imag);
+    x1->real = make_negative_zero (x1->real);
+    x2->real = make_negative_zero (x2->real);
+    x1->imag = make_negative_zero (x1->imag);
+    x2->imag = make_negative_zero (x2->imag);
 
+    char str1[MAX_LENGTH] = "";
+    char str2[MAX_LENGTH] = "";
     switch (n_roots)
     {
-    case NO_ROOTS:
-        printf ("No solutions");
-        break;
-    case ONE_ROOT:
-        char str[MAX_LENGTH];
-        print_complex (x1, str);
-        printf ("1 solution: x = %s", str);
-        break;
-    case TWO_ROOTS:
-        char str1[MAX_LENGTH];
-        char str2[MAX_LENGTH];
-        print_complex (x1, str1);
-        print_complex (x2, str2);
-        printf ("2 solutions: x1 = %s, x2 = %s", str1, str2);
-        break;
-    case INFINIT_ROOTS:
-        printf ("Infinite number of solutions");
-        break;
-    default:
-        assert (!"Problem is in the output_answer function");
-        break;
+        case NO_ROOTS:
+            printf ("No solutions");
+            break;
+        case ONE_ROOT:
+            print_complex (x1, str1);
+            printf ("1 solution: x = %s", str1);
+            break;
+        case TWO_ROOTS:
+            print_complex (x1, str1);
+            print_complex (x2, str2);
+            printf ("2 solutions: x1 = %s, x2 = %s", str1, str2);
+            break;
+        case INFINIT_ROOTS:
+            printf ("Infinite number of solutions");
+            break;
+        default:
+            assert (!"Problem is in the output_answer function");
+            break;
     }
 }
 
@@ -148,9 +145,10 @@ int print_complex (const Complex* x, char* str)
     assert (isfinite (x->real));
     assert (isfinite (x->imag));
 
-    char str_real[MAX_LENGTH];
-    char str_imag[MAX_LENGTH];
+    char str_real[MAX_LENGTH] = "";
+    char str_imag[MAX_LENGTH] = "";
     char str_zero[] = "0";
+
     sprintf (str_real, "%.2lf", x->real);
     if (x->imag >= 0)
         sprintf (str_imag, " + %.2lfi", x->imag);
@@ -175,6 +173,7 @@ int print_complex (const Complex* x, char* str)
             return 0;
         }
     }
+
     strcat (str_real, str_imag);
     strcpy (str, str_real);
     return 0;
@@ -183,6 +182,7 @@ int print_complex (const Complex* x, char* str)
 void input_coefficients (Coeffs* coeffs)
 {
     printf ("# Enter the coefficients a, b, c separated by a space\n");
+
     while (scanf ("%lf %lf %lf", &(coeffs->a), &(coeffs->b), &(coeffs->c)) != 3)
     {
         clear_buffer ();

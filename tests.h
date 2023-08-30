@@ -9,7 +9,7 @@
 #include "solver.h"
 
 //!< A constant that stores the maximum possible length of the test name
-const int SIZE_OF_NAME = 25;
+static const int SIZE_OF_NAME = 25;
 
 //! @class Test
 //! This structure stores the name of the test, the coefficients a, b, c, the number of roots and the roots themselves
@@ -33,6 +33,8 @@ Test* read_file (const char* file_name, int* num_tests, Errors* error);
 //! @return void
 void swap (Complex* a, Complex* b);
 
+void sort_roots (Complex* x1, Complex* x2);
+
 //! @brief Conducts all tests of the program
 //! @param const char* file_name - name of file with tests
 //! @return void
@@ -42,14 +44,14 @@ Errors all_tests (const char* file_name);
 //! @param double a
 //! @param double b
 //! @return True if the numbers are equal, false if not
-bool is_equal_test(double a, double b);
+bool is_equal_test(const double a, const double b);
 
-void print_failed (const Test* test, int n_roots, const Complex* x1, const Complex* x2);
+void print_failed (const Test* test, const int n_roots, const Complex* x1, const Complex* x2);
 
 void print_ok (const char* name);
 
-void print_end_tests (int num_ok_tests, int num_tests);
+void print_end_tests (const int num_ok_tests, const int num_tests);
 
-bool test_is_ok (int n_roots, int n_roots_ref, const Complex* x1, const Complex* x2, const Roots* roots);
+bool test_is_ok (const int n_roots, const int n_roots_ref, const Complex* x1, const Complex* x2, const Roots* roots);
 
 #endif //TESTS_HEADER

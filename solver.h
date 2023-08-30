@@ -27,28 +27,28 @@ struct Roots {
 
 enum Errors
 {
-    CORRECT             = 0,
-    ERROR_FILE_OPEN     = 1,
-    ERROR_OF_MEMORY     = 2
+    CORRECT         = 0,
+    ERROR_FILE_OPEN = 1,
+    ERROR_OF_MEMORY = 2
 };
 
 //! This enum stores all possible numbers of solutions to the quadratic equation
 enum NumOfSolutions
 {
-    INFINIT_ROOTS   = -1,
-    NO_ROOTS        = 0,
-    ONE_ROOT        = 1,
-    TWO_ROOTS       = 2,
+    INFINIT_ROOTS = -1,
+    NO_ROOTS      = 0,
+    ONE_ROOT      = 1,
+    TWO_ROOTS     = 2
 };
 
-const int MAX_LENGTH = 20;
+static const int MAX_LENGTH = 50;
 
 //! @brief Solves a linear equation
 //! @param double a - the first coefficient
 //! @param double b - the second coefficient
 //! @param Complex* x - pointer to answer
 //! @return Number of solutions
-NumOfSolutions solve_linear (double a, double b, Complex* x);
+NumOfSolutions solve_linear (const double a, const double b, Complex* x);
 
 //! @brief Solves a square equation with a non-zero coefficient a
 //! @param double a - the first coefficient
@@ -57,7 +57,7 @@ NumOfSolutions solve_linear (double a, double b, Complex* x);
 //! @param Complex* x1 - pointer to the first answer
 //! @param Complex* x2 - pointer to the second answer
 //! @return Number of solutions
-NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2);
+NumOfSolutions solve_square (const Coeffs* coeffs, Complex* x1, Complex* x2);
 
 //! @brief Solves a square equation
 //! @param double a - the first coefficient
@@ -66,13 +66,13 @@ NumOfSolutions solve_square (Coeffs* coeffs, Complex* x1, Complex* x2);
 //! @param Complex* x1 - pointer to the first answer
 //! @param Complex* x2 - pointer to the second answer
 //! @return Number of solutions
-NumOfSolutions solve_equation (Coeffs* coeffs, Complex* x1, Complex* x2);
+NumOfSolutions solve_equation (const Coeffs* coeffs, Complex* x1, Complex* x2);
 
 //! @brief Compares 2 numbers of the double type
 //! @param double a
 //! @param double b
 //! @return True if the numbers are equal, false if not
-bool is_equal (double a, double b);
+bool is_equal (const double a, const double b);
 
 //! @brief Convert the number -0.0000 to 0.0000
 //! @param double x
@@ -84,7 +84,7 @@ double make_negative_zero (double x);
 //! @param Complex* x1 - pointer to the first answer
 //! @param Complex* x2 - pointer to the second answer
 //! @return void
-void output_answer (int n_roots, Complex* x1, Complex* x2);
+void output_answer (const int n_roots, Complex* x1, Complex* x2);
 
 //! @brief Prints a complex number
 //! @param Complex* x - pointer to output Complex number

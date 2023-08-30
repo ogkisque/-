@@ -1,31 +1,33 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+
 #include "solver.h"
 #include "tests.h"
 
-int main (int argc, char* argv[])
+static const char* FLAG_TESTS = "--tests";
+
+int main (const int argc, const char* argv[])
 {
-    const char* FLAG_TESTS = "--tests";
-    if ((argc == 3) && (strcmp(argv[1], FLAG_TESTS) == 0))
+    if ((argc == 3) && (strcmp (argv[1], FLAG_TESTS) == 0))
     {
         Errors err = all_tests (argv[2]);
         switch (err)
         {
-        case ERROR_FILE_OPEN:
-            printf ("There is no such file\n");
-            break;
-        case ERROR_OF_MEMORY:
-            printf ("Insufficient memory\n");
-            break;
-        default:
-            break;
+            case ERROR_FILE_OPEN:
+                printf ("There is no such file\n");
+                break;
+            case ERROR_OF_MEMORY:
+                printf ("Insufficient memory\n");
+                break;
+            default:
+                break;
         }
         return 0;
     }
 
     greeting ();
-    Coeffs coeffs = {.a = NAN, .b = NAN, .c = NAN};
+    Coeffs coeffs = {.a = 0, .b = 0, .c = 0};
     input_coefficients (&coeffs);
 
     Complex x1 = {.real = 0, .imag = 0};
